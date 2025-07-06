@@ -1,4 +1,4 @@
-package org.mcp;
+package com.ubs.gp.mcp;
 
 import io.quarkus.logging.Log;
 import jakarta.ws.rs.GET;

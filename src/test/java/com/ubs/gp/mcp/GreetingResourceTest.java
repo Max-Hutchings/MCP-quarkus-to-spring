@@ -1,4 +1,4 @@
-package org.mcp;
+package com.ubs.gp.mcp;
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;

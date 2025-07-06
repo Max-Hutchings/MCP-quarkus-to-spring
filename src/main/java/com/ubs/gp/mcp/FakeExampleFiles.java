@@ -1,4 +1,4 @@
-package org.mcp;
+package com.ubs.gp.mcp;
 
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -203,6 +203,68 @@ public class FakeExampleFiles {
                 
                         return "Logged messages!";
                     }
+                """;
+    }
+
+
+    public String getExampleConfigProperties(){
+        return """
+                @ConfigProperties(prefix="myapp")
+                public class MyConfig {
+                  public String host;
+                  public int port;
+                }
+                @Inject MyConfig config;
+                
+                or for individual properties
+                @ConfigProperty(name="myapp.host") String host;
+                
+                """;
+    }
+
+    public String getExampleRestController(){
+        return """
+                package com.example;
+                
+                import jakarta.inject.Inject;                         // CDI injection
+                import jakarta.ws.rs.*;                               // JAX-RS annotations
+                import jakarta.ws.rs.core.MediaType;
+                import jakarta.ws.rs.core.Response;
+                
+                @Path("/hello")                                      // root path for this resource
+                @Produces(MediaType.APPLICATION_JSON)                // all responses are JSON
+                @Consumes(MediaType.APPLICATION_JSON)                // all request bodies are JSON
+                public class HelloResource {
+                
+                    @Inject                                           // inject business-logic bean
+                    HelloService helloService;
+                
+                    @GET
+                    @Path("/{name}")                                  // handles GET /hello/{name}
+                    public Response hello(@PathParam("name") String name) {
+                        String greeting = helloService.greet(name);   // call service to build greeting
+                        return Response.ok(greeting).build();         // return 200 OK with greeting
+                    }
+                
+                    @POST
+                    public Response createGreeting(GreetingRequest req) {
+                        Greeting created =                            
+                            helloService.createGreeting(req.getName()); // create new greeting via service
+                        return Response.status(Response.Status.CREATED) // return 201 Created
+                                       .entity(created)               
+                                       .build();
+                    }
+                
+                    @PUT
+                    @Path("/{name}")                                  // handles PUT /hello/{name}
+                    public Response updateGreeting(@PathParam("name") String name,
+                                                   GreetingRequest req) {
+                        Greeting updated =                           
+                            helloService.updateGreeting(name, req.getName()); // update greeting via service
+                        return Response.ok(updated).build();           // return 200 OK with updated entity
+                    }
+                }
+                
                 """;
     }
 }
